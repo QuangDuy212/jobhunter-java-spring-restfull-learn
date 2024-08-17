@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.service.UserService;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 public class UserController {
     private final UserService userService;
@@ -28,5 +31,16 @@ public class UserController {
     public String deleteUser(@PathVariable("id") long id) {
         this.userService.handleDeleteUser(id);
         return "id: " + id;
+    }
+
+    @GetMapping("/user/{id}")
+    public User fetchUserById(@PathVariable("id") long id) {
+        return this.userService.fetchUserById(id);
+    }
+
+    @GetMapping("/user")
+    public List<User> fetchAllUsers() {
+        List<User> users = this.userService.fetchAllUsers();
+        return users;
     }
 }

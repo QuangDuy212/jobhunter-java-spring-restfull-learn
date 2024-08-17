@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.repository.UserRepository;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -20,4 +22,16 @@ public class UserService {
     public void handleDeleteUser(long id) {
         this.userRepository.deleteById(id);
     }
+
+    public List<User> fetchAllUsers() {
+        return this.userRepository.findAll();
+    }
+
+    public User fetchUserById(long id) {
+        Optional<User> user = this.userRepository.findById(id);
+        if (user.isPresent())
+            return user.get();
+        return null;
+    }
+
 }
