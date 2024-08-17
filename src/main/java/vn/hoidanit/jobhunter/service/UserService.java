@@ -13,7 +13,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void handleCreateAUser(User user) {
-        this.userRepository.save(user);
+    public User handleCreateAUser(User user) {
+        return this.userRepository.save(user);
     }
 }
