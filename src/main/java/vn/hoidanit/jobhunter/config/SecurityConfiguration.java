@@ -25,11 +25,13 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(c -> c.disable())
                 .authorizeHttpRequests(
                         authz -> authz
                                 .requestMatchers("/**", "/users").permitAll()
-                                .anyRequest().authenticated())
-                .formLogin(f -> f.permitAll())
+                                .anyRequest().permitAll())
+                // .anyRequest().authentication())
+                .formLogin(f -> f.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
