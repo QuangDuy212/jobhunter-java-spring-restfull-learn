@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import vn.hoidanit.jobhunter.domain.RestResponse;
 
 @ControllerAdvice
-public class FormatRestResponse implements ResponseBodyAdvice {
+public class FormatRestResponse implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {
