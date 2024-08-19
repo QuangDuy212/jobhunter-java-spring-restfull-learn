@@ -37,10 +37,10 @@ public class SecurityConfiguration {
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
                         // config for handle exception
                         .authenticationEntryPoint(customAuthenticationEntryPoint))
-                .exceptionHandling(
-                        exceptions -> exceptions
-                                .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) // 401
-                                .accessDeniedHandler(new BearerTokenAccessDeniedHandler())) // 403
+                // .exceptionHandling(
+                // exceptions -> exceptions
+                // .authenticationEntryPoint(customAuthenticationEntryPoint) // 401
+                // .accessDeniedHandler(new BearerTokenAccessDeniedHandler())) // 403
                 // disable login
                 .formLogin(f -> f.disable())
                 // config for spring rest stateful -> stateless
