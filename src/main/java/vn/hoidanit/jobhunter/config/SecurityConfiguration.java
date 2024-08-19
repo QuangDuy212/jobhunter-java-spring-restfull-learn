@@ -20,32 +20,34 @@ import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http,
-            CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
-        http
-                .csrf(c -> c.disable())
-                .authorizeHttpRequests(
-                        authz -> authz
-                                .requestMatchers("/", "/login").permitAll()
-                                .anyRequest().authenticated())
-                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
-                        // config for handle exception
-                        .authenticationEntryPoint(customAuthenticationEntryPoint))
-                // .exceptionHandling(
-                // exceptions -> exceptions
-                // .authenticationEntryPoint(customAuthenticationEntryPoint) // 401
-                // .accessDeniedHandler(new BearerTokenAccessDeniedHandler())) // 403
-                // disable login
-                .formLogin(f -> f.disable())
-                // config for spring rest stateful -> stateless
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        return http.build();
-    }
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http,
+                        CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
+                http
+                                .csrf(c -> c.disable())
+                                .cors(Customizer.withDefaults())
+                                .authorizeHttpRequests(
+                                                authz -> authz
+                                                                .requestMatchers("/", "/login").permitAll()
+                                                                .anyRequest().authenticated())
+                                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
+                                                // config for handle exception
+                                                .authenticationEntryPoint(customAuthenticationEntryPoint))
+                                // .exceptionHandling(
+                                // exceptions -> exceptions
+                                // .authenticationEntryPoint(customAuthenticationEntryPoint) // 401
+                                // .accessDeniedHandler(new BearerTokenAccessDeniedHandler())) // 403
+                                // disable login
+                                .formLogin(f -> f.disable())
+                                // config for spring rest stateful -> stateless
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                return http.build();
+        }
 
 }
