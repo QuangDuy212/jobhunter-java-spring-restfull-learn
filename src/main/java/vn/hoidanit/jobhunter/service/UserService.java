@@ -9,9 +9,13 @@ import org.springframework.stereotype.Service;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.dto.Meta;
 import vn.hoidanit.jobhunter.domain.dto.ResultPaginationDTO;
+import vn.hoidanit.jobhunter.domain.dto.user.ResCreateUserDTO;
+import vn.hoidanit.jobhunter.domain.dto.user.ResUpdateUserDTO;
+import vn.hoidanit.jobhunter.domain.dto.user.ResUserDTO;
 import vn.hoidanit.jobhunter.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 
 @Service
 public class UserService {
@@ -29,9 +33,22 @@ public class UserService {
         this.userRepository.deleteById(id);
     }
 
+    public boolean isEmailExist(String email) {
+        return this.userRepository.existsByEmail(email);
+    }
+
+    public boolean isIdExist(long id) {
+        return this.userRepository.existsById(id);
+    }
+
     public ResultPaginationDTO fetchAllUsers(Specification<User> spec, Pageable pageable) {
         Page<User> pageUser = this.userRepository.findAll(spec, pageable);
         ResultPaginationDTO rs = new ResultPaginationDTO();
+
+        List<ResUserDTO> listUser = new ArrayList<ResUserDTO>();
+        for (User item : pageUser.getContent()) {
+            listUser.add(this.convertUserToResUserDTO(item));
+        }
         Meta mt = new Meta();
 
         mt.setPage(pageable.getPageNumber() + 1);
@@ -41,7 +58,7 @@ public class UserService {
         mt.setTotal(pageUser.getTotalElements());
 
         rs.setMeta(mt);
-        rs.setResult(pageUser.getContent());
+        rs.setResult(listUser);
         return rs;
     }
 
@@ -55,9 +72,10 @@ public class UserService {
     public User handleUpdateUser(User user) {
         User currentUser = this.fetchUserById(user.getId());
         if (currentUser != null) {
-            currentUser.setEmail(user.getEmail());
             currentUser.setName(user.getName());
-            currentUser.setPassword(user.getPassword());
+            currentUser.setAddress(user.getAddress());
+            currentUser.setAge(user.getAge());
+            currentUser.setGender(user.getGender());
             // update
             currentUser = this.userRepository.save(currentUser);
         }
@@ -66,6 +84,42 @@ public class UserService {
 
     public User handleGetUserByUsername(String username) {
         return this.userRepository.findByEmail(username);
+    }
+
+    public ResCreateUserDTO convertToResCreateUserDTO(User user) {
+        ResCreateUserDTO res = new ResCreateUserDTO();
+        res.setId(user.getId());
+        res.setName(user.getName());
+        res.setEmail(user.getEmail());
+        res.setAddress(user.getAddress());
+        res.setAge(user.getAge());
+        res.setGender(user.getGender());
+        res.setCreatedAt(user.getCreatedAt());
+        return res;
+    }
+
+    public ResUserDTO convertUserToResUserDTO(User user) {
+        ResUserDTO res = new ResUserDTO();
+        res.setId(user.getId());
+        res.setName(user.getName());
+        res.setEmail(user.getEmail());
+        res.setAddress(user.getAddress());
+        res.setAge(user.getAge());
+        res.setGender(user.getGender());
+        res.setCreatedAt(user.getCreatedAt());
+        res.setUdpatedAt(user.getUpdatedAt());
+        return res;
+    }
+
+    public ResUpdateUserDTO convertUserToUpdateUserDTO(User user) {
+        ResUpdateUserDTO res = new ResUpdateUserDTO();
+        res.setName(user.getName());
+        res.setAddress(user.getAddress());
+        res.setGender(user.getGender());
+        res.setAge(user.getAge());
+        res.setUdpatedAt(user.getUpdatedAt());
+        res.setId(user.getId());
+        return res;
     }
 
 }
