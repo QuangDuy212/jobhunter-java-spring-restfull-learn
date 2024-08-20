@@ -9,6 +9,7 @@ import vn.hoidanit.jobhunter.domain.Company;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.service.CompanyService;
+import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
 import vn.hoidanit.jobhunter.util.error.IdInvalidException;
 
 import java.util.List;
@@ -36,12 +37,14 @@ public class CompanyController {
     }
 
     @PostMapping("/companies")
+    @ApiMessage("create a company")
     public ResponseEntity<Company> createNewCompany(@Valid @RequestBody Company reqCompany) {
         Company company = this.companyService.handleCreateCompany(reqCompany);
         return ResponseEntity.status(HttpStatus.CREATED).body(company);
     }
 
     @GetMapping("/companies")
+    @ApiMessage("fetch all company")
     public ResponseEntity<ResultPaginationDTO> fetchAllCompanies(
             @Filter Specification<Company> spec,
             Pageable pageable) {
@@ -51,6 +54,7 @@ public class CompanyController {
     }
 
     @GetMapping("/companies/{id}")
+    @ApiMessage("fetch company by id")
     public ResponseEntity<Company> fetchCompanyById(@PathVariable("id") long id) {
         Optional<Company> company = this.companyService.fetchCompanyById(id);
         // return ResponseEntity.status(HttpStatus.OK).body(user);
@@ -58,6 +62,7 @@ public class CompanyController {
     }
 
     @PutMapping("/companies")
+    @ApiMessage("update a company")
     public ResponseEntity<Company> updateAUser(@RequestBody Company rqCompany) {
         Company company = this.companyService.handleUpdateCompany(rqCompany);
         // return ResponseEntity.status(HttpStatus.OK).body(ericUser);
@@ -65,6 +70,7 @@ public class CompanyController {
     }
 
     @DeleteMapping("/companies/{id}")
+    @ApiMessage("delete company by id")
     public ResponseEntity<Void> deleteCompany(@PathVariable("id") long id) throws IdInvalidException {
         if (id >= 1500) {
             throw new IdInvalidException("Id khong lon hon 1500");

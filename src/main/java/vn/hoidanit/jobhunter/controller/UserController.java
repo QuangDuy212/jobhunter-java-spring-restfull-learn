@@ -20,6 +20,7 @@ import com.turkraft.springfilter.boot.Filter;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.service.UserService;
+import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
 import vn.hoidanit.jobhunter.util.error.IdInvalidException;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
+    @ApiMessage("create a user")
     public ResponseEntity<User> createNewUser(@RequestBody User user) {
         String hashPass = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashPass);
@@ -44,6 +46,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
+    @ApiMessage("delete user by id")
     public ResponseEntity<String> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
         if (id >= 1500) {
             throw new IdInvalidException("Id khong lon hon 1500");
@@ -54,6 +57,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
+    @ApiMessage("fetch user by id")
     public ResponseEntity<User> fetchUserById(@PathVariable("id") long id) {
         User user = this.userService.fetchUserById(id);
         // return ResponseEntity.status(HttpStatus.OK).body(user);
@@ -61,6 +65,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
+    @ApiMessage("fetch all users")
     public ResponseEntity<ResultPaginationDTO> fetchAllUsers(
             @Filter Specification<User> spec,
             Pageable pageable) {
@@ -71,6 +76,7 @@ public class UserController {
     }
 
     @PutMapping("/users")
+    @ApiMessage("update a user")
     public ResponseEntity<User> updateAUser(@RequestBody User user) {
         User ericUser = this.userService.handleUpdateUser(user);
         // return ResponseEntity.status(HttpStatus.OK).body(ericUser);
