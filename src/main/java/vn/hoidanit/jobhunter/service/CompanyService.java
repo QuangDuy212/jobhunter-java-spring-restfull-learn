@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import vn.hoidanit.jobhunter.domain.Company;
@@ -25,9 +26,9 @@ public class CompanyService {
         return this.companyRespository.save(company);
     }
 
-    public ResultPaginationDTO fetchAllCompanies(Pageable pageable) {
+    public ResultPaginationDTO fetchAllCompanies(Specification<Company> spec, Pageable pageable) {
         // fetchh
-        Page<Company> pageCompanies = this.companyRespository.findAll(pageable);
+        Page<Company> pageCompanies = this.companyRespository.findAll(spec, pageable);
 
         // handle result
         ResultPaginationDTO rs = new ResultPaginationDTO();

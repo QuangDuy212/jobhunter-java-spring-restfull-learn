@@ -29,19 +29,19 @@ public class UserService {
         this.userRepository.deleteById(id);
     }
 
-    public ResultPaginationDTO fetchAllUsers(Specification<User> pageable) {
-        List<User> pageUser = this.userRepository.findAll(pageable);
+    public ResultPaginationDTO fetchAllUsers(Specification<User> spec, Pageable pageable) {
+        Page<User> pageUser = this.userRepository.findAll(spec, pageable);
         ResultPaginationDTO rs = new ResultPaginationDTO();
         Meta mt = new Meta();
 
-        // mt.setPage(pageUser.getNumber() + 1);
-        // mt.setPageSize(pageUser.getSize());
+        mt.setPage(pageUser.getNumber() + 1);
+        mt.setPageSize(pageUser.getSize());
 
-        // mt.setPages(pageUser.getTotalPages());
-        // mt.setTotal(pageUser.getTotalElements());
+        mt.setPages(pageUser.getTotalPages());
+        mt.setTotal(pageUser.getTotalElements());
 
         rs.setMeta(mt);
-        rs.setResult(pageUser);
+        rs.setResult(pageUser.getContent());
         return rs;
     }
 
