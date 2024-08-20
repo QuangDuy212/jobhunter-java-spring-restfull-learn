@@ -2,6 +2,7 @@ package vn.hoidanit.jobhunter.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,19 +29,19 @@ public class UserService {
         this.userRepository.deleteById(id);
     }
 
-    public ResultPaginationDTO fetchAllUsers(Pageable pageable) {
-        Page<User> pageUser = this.userRepository.findAll(pageable);
+    public ResultPaginationDTO fetchAllUsers(Specification<User> pageable) {
+        List<User> pageUser = this.userRepository.findAll(pageable);
         ResultPaginationDTO rs = new ResultPaginationDTO();
         Meta mt = new Meta();
 
-        mt.setPage(pageUser.getNumber() + 1);
-        mt.setPageSize(pageUser.getSize());
+        // mt.setPage(pageUser.getNumber() + 1);
+        // mt.setPageSize(pageUser.getSize());
 
-        mt.setPages(pageUser.getTotalPages());
-        mt.setTotal(pageUser.getTotalElements());
+        // mt.setPages(pageUser.getTotalPages());
+        // mt.setTotal(pageUser.getTotalElements());
 
         rs.setMeta(mt);
-        rs.setResult(pageUser.getContent());
+        rs.setResult(pageUser);
         return rs;
     }
 
