@@ -43,7 +43,7 @@ public class AuthController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // create a token
-        String access_token = this.securityUtil.createToken(authentication);
+        String access_token = this.securityUtil.createAccessToken(authentication);
         // save info auth into security context
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -58,6 +58,9 @@ public class AuthController {
             res.setUser(userLogin);
         }
         res.setAccessToken(access_token);
+
+        // create refesh token
+        String refresh_token = this.securityUtil.createRefreshToken(loginDTO.getUsername(), res);
         return ResponseEntity.ok().body(res);
     }
 }
