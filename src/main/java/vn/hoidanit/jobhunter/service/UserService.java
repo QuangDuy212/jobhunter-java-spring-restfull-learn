@@ -133,4 +133,9 @@ public class UserService {
     public User getUserByRefreshTokenAndEmail(String token, String email) {
         return this.userRepository.findByRefreshTokenAndEmail(token, email);
     }
+
+    public void handleLogout(User user) {
+        user.setRefreshToken(null);
+        this.userRepository.save(user);
+    }
 }
