@@ -19,12 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
+import vn.hoidanit.jobhunter.domain.Company;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.response.ResCreateUserDTO;
 import vn.hoidanit.jobhunter.domain.response.ResUpdateUserDTO;
 import vn.hoidanit.jobhunter.domain.response.ResUserDTO;
 import vn.hoidanit.jobhunter.domain.response.ResultPaginationDTO;
-import vn.hoidanit.jobhunter.repository.UserRepository;
+import vn.hoidanit.jobhunter.service.CompanyService;
 import vn.hoidanit.jobhunter.service.UserService;
 import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
 import vn.hoidanit.jobhunter.util.error.IdInvalidException;
@@ -36,10 +37,12 @@ import java.util.Optional;
 @RequestMapping("/api/v1")
 public class UserController {
     private final UserService userService;
+    private final CompanyService companyService;
     private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, CompanyService companyService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.companyService = companyService;
         this.passwordEncoder = passwordEncoder;
     }
 

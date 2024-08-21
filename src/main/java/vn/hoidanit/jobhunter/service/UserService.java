@@ -6,11 +6,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import vn.hoidanit.jobhunter.domain.Company;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.response.ResCreateUserDTO;
 import vn.hoidanit.jobhunter.domain.response.ResUpdateUserDTO;
 import vn.hoidanit.jobhunter.domain.response.ResUserDTO;
 import vn.hoidanit.jobhunter.domain.response.ResultPaginationDTO;
+import vn.hoidanit.jobhunter.repository.CompanyRespository;
 import vn.hoidanit.jobhunter.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
@@ -19,12 +21,21 @@ import java.util.ArrayList;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final CompanyRespository companyRespository;
+    private final CompanyService companyService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, CompanyRespository companyRespository,
+            CompanyService companyService) {
         this.userRepository = userRepository;
+        this.companyRespository = companyRespository;
+        this.companyService = companyService;
     }
 
     public User handleCreateAUser(User user) {
+        if (user.getCompany() != null) {
+            Optional<Company> company = this.companyService.fetchCompanyById(user.getCompany().getId());
+            user.setCompany(company.isPresent() ? company.get() : null);
+        }
         return this.userRepository.save(user);
     }
 
@@ -75,6 +86,10 @@ public class UserService {
             currentUser.setAddress(user.getAddress());
             currentUser.setAge(user.getAge());
             currentUser.setGender(user.getGender());
+            if (user.getCompany() != null) {
+                Optional<Company> company = this.companyService.fetchCompanyById(user.getCompany().getId());
+                currentUser.setCompany(company.isPresent() ? company.get() : null);
+            }
             // update
             currentUser = this.userRepository.save(currentUser);
         }
@@ -94,6 +109,17 @@ public class UserService {
         res.setAge(user.getAge());
         res.setGender(user.getGender());
         res.setCreatedAt(user.getCreatedAt());
+        if (user.getCompany() != null) {
+            ResCreateUserDTO.CompanyUser infoCompany = new ResCreateUserDTO.CompanyUser();
+            infoCompany.setId(user.getCompany().getId());
+            infoCompany.setName(user.getCompany().getName());
+            res.setCompany(infoCompany);
+        } else {
+            ResCreateUserDTO.CompanyUser companyInfo = new ResCreateUserDTO.CompanyUser();
+            companyInfo.setId(0);
+            companyInfo.setName(null);
+            res.setCompany(companyInfo);
+        }
         return res;
     }
 
@@ -107,6 +133,17 @@ public class UserService {
         res.setGender(user.getGender());
         res.setCreatedAt(user.getCreatedAt());
         res.setUdpatedAt(user.getUpdatedAt());
+        if (user.getCompany() != null) {
+            ResUserDTO.CompanyUser companyInfo = new ResUserDTO.CompanyUser();
+            companyInfo.setId(user.getCompany().getId());
+            companyInfo.setName(user.getCompany().getName());
+            res.setCompany(companyInfo);
+        } else {
+            ResUserDTO.CompanyUser companyInfo = new ResUserDTO.CompanyUser();
+            companyInfo.setId(0);
+            companyInfo.setName(null);
+            res.setCompany(companyInfo);
+        }
         return res;
     }
 
@@ -118,6 +155,17 @@ public class UserService {
         res.setAge(user.getAge());
         res.setUdpatedAt(user.getUpdatedAt());
         res.setId(user.getId());
+        if (user.getCompany() != null) {
+            ResUpdateUserDTO.CompanyUser company = new ResUpdateUserDTO.CompanyUser();
+            company.setId(user.getCompany().getId());
+            company.setName(user.getCompany().getName());
+            res.setCompany(company);
+        } else {
+            ResUpdateUserDTO.CompanyUser companyInfo = new ResUpdateUserDTO.CompanyUser();
+            companyInfo.setId(0);
+            companyInfo.setName(null);
+            res.setCompany(companyInfo);
+        }
         return res;
     }
 

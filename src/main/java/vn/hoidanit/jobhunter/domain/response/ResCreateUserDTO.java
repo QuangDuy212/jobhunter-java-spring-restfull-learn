@@ -2,8 +2,6 @@ package vn.hoidanit.jobhunter.domain.response;
 
 import java.time.Instant;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.Getter;
 import lombok.Setter;
 import vn.hoidanit.jobhunter.util.constant.GenderEnum;
@@ -19,4 +17,13 @@ public class ResCreateUserDTO {
     private int age;
     // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant createdAt;
+    private CompanyUser company;
+
+    @Getter
+    @Setter
+    public static class CompanyUser {
+        private long id;
+        private String name;
+    }
+
 }

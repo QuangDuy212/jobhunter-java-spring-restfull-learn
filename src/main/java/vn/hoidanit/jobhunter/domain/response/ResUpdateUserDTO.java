@@ -18,4 +18,12 @@ public class ResUpdateUserDTO {
     private int age;
     // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant udpatedAt;
+    private CompanyUser company;
+
+    @Getter
+    @Setter
+    public static class CompanyUser {
+        private long id;
+        private String name;
+    }
 }

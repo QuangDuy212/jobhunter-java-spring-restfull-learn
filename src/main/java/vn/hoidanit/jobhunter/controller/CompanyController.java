@@ -74,8 +74,9 @@ public class CompanyController {
     @DeleteMapping("/companies/{id}")
     @ApiMessage("delete company by id")
     public ResponseEntity<Void> deleteCompany(@PathVariable("id") long id) throws IdInvalidException {
-        if (id >= 1500) {
-            throw new IdInvalidException("Id khong lon hon 1500");
+        Optional<Company> company = this.companyService.fetchCompanyById(id);
+        if (!company.isPresent()) {
+            throw new IdInvalidException("Không tồn tại công ty với ID được truyền vào");
         }
         this.companyService.handleDeleteCompany(id);
         // return ResponseEntity.status(HttpStatus.OK).body("id: " + id);
