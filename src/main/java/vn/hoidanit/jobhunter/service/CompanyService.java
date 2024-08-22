@@ -77,4 +77,8 @@ public class CompanyService {
         }
         this.companyRespository.deleteById(id);
     }
+
+    public boolean isExistId(long id) {
+        return this.companyRespository.existsById(id);
+    }
 }
