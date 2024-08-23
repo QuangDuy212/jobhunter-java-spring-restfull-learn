@@ -9,6 +9,6 @@ import vn.hoidanit.jobhunter.domain.Resume;
 import vn.hoidanit.jobhunter.domain.User;
 
 @Repository
-public interface ResumeRespository extends JpaRepository<Resume, Long>, JpaSpecificationExecutor<Resume> {
+public interface ResumeRepository extends JpaRepository<Resume, Long>, JpaSpecificationExecutor<Resume> {
     boolean existsByUserAndJob(User user, Job job);
 }

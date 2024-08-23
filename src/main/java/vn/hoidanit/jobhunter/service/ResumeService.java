@@ -17,16 +17,16 @@ import vn.hoidanit.jobhunter.domain.response.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.domain.response.resume.ResCreateResumeDTO;
 import vn.hoidanit.jobhunter.domain.response.resume.ResResumeDTO;
 import vn.hoidanit.jobhunter.domain.response.resume.ResUpdateResumeDTO;
-import vn.hoidanit.jobhunter.repository.ResumeRespository;
+import vn.hoidanit.jobhunter.repository.ResumeRepository;
 
 @Service
 public class ResumeService {
-    private final ResumeRespository resumeRespository;
+    private final ResumeRepository resumeRepository;
     private final UserService userService;
     private final JobService jobService;
 
-    public ResumeService(ResumeRespository resumeRespository, UserService userService, JobService jobService) {
-        this.resumeRespository = resumeRespository;
+    public ResumeService(ResumeRepository resumeRepository, UserService userService, JobService jobService) {
+        this.resumeRepository = resumeRepository;
         this.userService = userService;
         this.jobService = jobService;
     }
@@ -59,7 +59,7 @@ public class ResumeService {
             Job job = this.jobService.fetchJobById(idJob);
             reqResume.setJob(job);
         }
-        return this.resumeRespository.save(reqResume);
+        return this.resumeRepository.save(reqResume);
     }
 
     public ResCreateResumeDTO convertResumeToResCreateResumeDTO(Resume resume) {
@@ -75,11 +75,11 @@ public class ResumeService {
         if (reqResume.getStatus() != null) {
             resume.setStatus(reqResume.getStatus());
         }
-        return this.resumeRespository.save(resume);
+        return this.resumeRepository.save(resume);
     }
 
     public Resume fetchResumeById(long id) {
-        Optional<Resume> resume = this.resumeRespository.findById(id);
+        Optional<Resume> resume = this.resumeRepository.findById(id);
         if (resume.isPresent())
             return resume.get();
         return null;
@@ -119,7 +119,7 @@ public class ResumeService {
 
     public ResultPaginationDTO fetchAllResumes(Specification<Resume> spec, Pageable pageable) {
 
-        Page<Resume> pageResume = this.resumeRespository.findAll(spec, pageable);
+        Page<Resume> pageResume = this.resumeRepository.findAll(spec, pageable);
         ResultPaginationDTO rs = new ResultPaginationDTO();
 
         List<ResResumeDTO> listResume = pageResume.getContent()
@@ -138,6 +138,6 @@ public class ResumeService {
     }
 
     public void handleDeleteResume(long id) {
-        this.resumeRespository.deleteById(id);
+        this.resumeRepository.deleteById(id);
     }
 }

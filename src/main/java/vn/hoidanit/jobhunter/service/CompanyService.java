@@ -11,26 +11,26 @@ import org.springframework.stereotype.Service;
 import vn.hoidanit.jobhunter.domain.Company;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.response.ResultPaginationDTO;
-import vn.hoidanit.jobhunter.repository.CompanyRespository;
+import vn.hoidanit.jobhunter.repository.CompanyRepository;
 import vn.hoidanit.jobhunter.repository.UserRepository;
 
 @Service
 public class CompanyService {
-    private final CompanyRespository companyRespository;
+    private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
 
-    public CompanyService(CompanyRespository companyRespository, UserRepository userRepository) {
-        this.companyRespository = companyRespository;
+    public CompanyService(CompanyRepository companyRepository, UserRepository userRepository) {
+        this.companyRepository = companyRepository;
         this.userRepository = userRepository;
     }
 
     public Company handleCreateCompany(Company company) {
-        return this.companyRespository.save(company);
+        return this.companyRepository.save(company);
     }
 
     public ResultPaginationDTO fetchAllCompanies(Specification<Company> spec, Pageable pageable) {
         // fetchh
-        Page<Company> pageCompanies = this.companyRespository.findAll(spec, pageable);
+        Page<Company> pageCompanies = this.companyRepository.findAll(spec, pageable);
 
         // handle result
         ResultPaginationDTO rs = new ResultPaginationDTO();
@@ -48,7 +48,7 @@ public class CompanyService {
     }
 
     public Optional<Company> fetchCompanyById(long id) {
-        Optional<Company> company = this.companyRespository.findById(id);
+        Optional<Company> company = this.companyRepository.findById(id);
         return company;
     }
 
@@ -61,7 +61,7 @@ public class CompanyService {
             currentCompany.setDescription(company.getDescription());
             currentCompany.setLogo(company.getLogo());
             // update
-            currentCompany = this.companyRespository.save(currentCompany);
+            currentCompany = this.companyRepository.save(currentCompany);
             return currentCompany;
         }
         return null;
@@ -75,10 +75,10 @@ public class CompanyService {
             List<User> users = this.userRepository.findByCompany(com);
             this.userRepository.deleteAll(users);
         }
-        this.companyRespository.deleteById(id);
+        this.companyRepository.deleteById(id);
     }
 
     public boolean isExistId(long id) {
-        return this.companyRespository.existsById(id);
+        return this.companyRepository.existsById(id);
     }
 }

@@ -12,7 +12,7 @@ import vn.hoidanit.jobhunter.domain.response.ResCreateUserDTO;
 import vn.hoidanit.jobhunter.domain.response.ResUpdateUserDTO;
 import vn.hoidanit.jobhunter.domain.response.ResUserDTO;
 import vn.hoidanit.jobhunter.domain.response.ResultPaginationDTO;
-import vn.hoidanit.jobhunter.repository.CompanyRespository;
+import vn.hoidanit.jobhunter.repository.CompanyRepository;
 import vn.hoidanit.jobhunter.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
@@ -21,13 +21,13 @@ import java.util.ArrayList;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final CompanyRespository companyRespository;
+    private final CompanyRepository companyRepository;
     private final CompanyService companyService;
 
-    public UserService(UserRepository userRepository, CompanyRespository companyRespository,
+    public UserService(UserRepository userRepository, CompanyRepository companyRepository,
             CompanyService companyService) {
         this.userRepository = userRepository;
-        this.companyRespository = companyRespository;
+        this.companyRepository = companyRepository;
         this.companyService = companyService;
     }
 
