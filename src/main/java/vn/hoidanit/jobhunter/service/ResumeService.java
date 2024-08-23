@@ -112,6 +112,7 @@ public class ResumeService {
             job.setId(resume.getJob().getId());
             job.setName(resume.getJob().getName());
             res.setJob(job);
+            res.setCompanyName(resume.getJob().getCompany().getName());
         }
         return res;
     }

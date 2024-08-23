@@ -44,7 +44,7 @@ public class JobController {
 
     @PutMapping("/jobs")
     @ApiMessage("Update a job")
-    public ResponseEntity<ResUpdateJob> putMethodName(@Valid @RequestBody Job reqJob) throws IdInvalidException {
+    public ResponseEntity<ResUpdateJob> putMethodName(@RequestBody Job reqJob) throws IdInvalidException {
         boolean checkExist = this.jobService.isExistId(reqJob.getId());
         if (!checkExist) {
             throw new IdInvalidException("Job not found");

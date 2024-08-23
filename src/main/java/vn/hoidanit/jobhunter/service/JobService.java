@@ -44,6 +44,12 @@ public class JobService {
             List<Skill> dbSkills = this.skillRespository.findByIdIn(reqSkills);
             j.setSkills(dbSkills);
         }
+        if (j.getCompany() != null) {
+            Optional<Company> cOptional = this.companyService.fetchCompanyById(j.getCompany().getId());
+            if (cOptional.isPresent()) {
+                j.setCompany(cOptional.get());
+            }
+        }
 
         // create job
         Job currentJob = this.jobRepository.save(j);
@@ -75,47 +81,50 @@ public class JobService {
         return this.jobRepository.existsById(id);
     }
 
-    public ResUpdateJob handleUpdateJob(Job j) {
-        // Optional<Job> jobOptional = this.jobRepository.findById(reqJob.getId());
-        // Job newJob = jobOptional.get();
-        // if (jobOptional.isPresent()) {
-        // newJob.setActive(reqJob.isActive());
-        // newJob.setLevel(reqJob.getLevel());
-        // if (reqJob.getName() != null)
-        // newJob.setName(reqJob.getName());
-        // if (reqJob.getLocation() != null)
-        // newJob.setLocation(reqJob.getLocation());
-        // if (reqJob.getSalary() > 0)
-        // newJob.setSalary(reqJob.getSalary());
-        // if (reqJob.getLevel() != null)
-        // newJob.setLevel(reqJob.getLevel());
-        // if (reqJob.getDescription() != null)
-        // newJob.setDescription(reqJob.getDescription());
-        // if (reqJob.getStartDate() != null)
-        // newJob.setStartDate(reqJob.getStartDate());
-        // if (reqJob.getEndDate() != null)
-        // newJob.setEndDate(reqJob.getEndDate());
-        // if (reqJob.getSkills() != null) {
-        // List<Skill> reqSkills = reqJob.getSkills();
-        // List<Long> listIds = new ArrayList<Long>();
-        // for (Skill skill : reqSkills) {
-        // listIds.add(skill.getId());
-        // }
-        // reqJob.setSkills(this.skillService.fetchListSkillByListId(listIds));
-        // }
-        // }
-        // return this.jobRepository.save(newJob);
-        // check skills
-        if (j.getSkills() != null) {
-            List<Long> reqSkills = j.getSkills()
-                    .stream().map(x -> x.getId())
-                    .collect(Collectors.toList());
-            List<Skill> dbSkills = this.skillRespository.findByIdIn(reqSkills);
-            j.setSkills(dbSkills);
+    public ResUpdateJob handleUpdateJob(Job reqJob) {
+        Optional<Job> jobOptional = this.jobRepository.findById(reqJob.getId());
+        Job newJob = jobOptional.get();
+        if (jobOptional.isPresent()) {
+            newJob.setActive(reqJob.isActive());
+            newJob.setLevel(reqJob.getLevel());
+            if (reqJob.getName() != null)
+                newJob.setName(reqJob.getName());
+            if (reqJob.getLocation() != null)
+                newJob.setLocation(reqJob.getLocation());
+            if (reqJob.getSalary() > 0)
+                newJob.setSalary(reqJob.getSalary());
+            if (reqJob.getLevel() != null)
+                newJob.setLevel(reqJob.getLevel());
+            if (reqJob.getDescription() != null)
+                newJob.setDescription(reqJob.getDescription());
+            if (reqJob.getStartDate() != null)
+                newJob.setStartDate(reqJob.getStartDate());
+            if (reqJob.getEndDate() != null)
+                newJob.setEndDate(reqJob.getEndDate());
+            if (reqJob.getSkills() != null) {
+                List<Long> listIds = reqJob.getSkills()
+                        .stream().map(item -> item.getId()).collect(Collectors.toList());
+                newJob.setSkills(this.skillService.fetchListSkillByListId(listIds));
+            }
+            if (reqJob.getCompany() != null) {
+                Optional<Company> cOptional = this.companyService.fetchCompanyById(reqJob.getCompany().getId());
+                if (cOptional.isPresent()) {
+                    newJob.setCompany(cOptional.get());
+                }
+            }
         }
+        // check skills
+        // Optional<Job> job = this.jobRepository.findById(j.getId());
+        // if (j.getSkills() != null) {
+        // List<Long> reqSkills = j.getSkills()
+        // .stream().map(x -> x.getId())
+        // .collect(Collectors.toList());
+        // List<Skill> dbSkills = this.skillRespository.findByIdIn(reqSkills);
+        // job.get().setSkills(dbSkills);
+        // }
 
-        // create job
-        Job currentJob = this.jobRepository.save(j);
+        // // create job
+        Job currentJob = this.jobRepository.save(newJob);
 
         // convert response
         ResUpdateJob dto = new ResUpdateJob();
