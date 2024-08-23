@@ -17,9 +17,6 @@ import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
 import vn.hoidanit.jobhunter.domain.Resume;
-import vn.hoidanit.jobhunter.domain.User;
-import vn.hoidanit.jobhunter.domain.response.ResUpdateUserDTO;
-import vn.hoidanit.jobhunter.domain.response.ResUserDTO;
 import vn.hoidanit.jobhunter.domain.response.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.domain.response.resume.ResCreateResumeDTO;
 import vn.hoidanit.jobhunter.domain.response.resume.ResResumeDTO;
@@ -109,5 +106,13 @@ public class ResumeController {
         this.resumeService.handleDeleteResume(id);
         // return ResponseEntity.status(HttpStatus.OK).body("id: " + id);
         return ResponseEntity.ok(null);
+    }
+
+    @PostMapping("/resumes/by-user")
+    @ApiMessage("Get list resumes by user")
+    public ResponseEntity<ResultPaginationDTO> fetchResumeByUser(Pageable pageable)
+            throws IdInvalidException {
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.resumeService.fetchResumeByUser(pageable));
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import vn.hoidanit.jobhunter.domain.Company;
+import vn.hoidanit.jobhunter.domain.Role;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.response.ResCreateUserDTO;
 import vn.hoidanit.jobhunter.domain.response.ResUpdateUserDTO;
@@ -23,18 +24,27 @@ public class UserService {
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
     private final CompanyService companyService;
+    private final RoleService roleService;
 
     public UserService(UserRepository userRepository, CompanyRepository companyRepository,
-            CompanyService companyService) {
+            CompanyService companyService, RoleService roleService) {
         this.userRepository = userRepository;
         this.companyRepository = companyRepository;
         this.companyService = companyService;
+        this.roleService = roleService;
     }
 
     public User handleCreateAUser(User user) {
+        // check company
         if (user.getCompany() != null) {
             Optional<Company> company = this.companyService.fetchCompanyById(user.getCompany().getId());
             user.setCompany(company.isPresent() ? company.get() : null);
+        }
+
+        // check role
+        if (user.getRole() != null) {
+            Role role = this.roleService.fetchRoleById(user.getRole().getId());
+            user.setRole(role != null ? role : null);
         }
         return this.userRepository.save(user);
     }
@@ -86,9 +96,17 @@ public class UserService {
             currentUser.setAddress(user.getAddress());
             currentUser.setAge(user.getAge());
             currentUser.setGender(user.getGender());
+
+            // check company
             if (user.getCompany() != null) {
                 Optional<Company> company = this.companyService.fetchCompanyById(user.getCompany().getId());
                 currentUser.setCompany(company.isPresent() ? company.get() : null);
+            }
+
+            // check role
+            if (user.getRole() != null) {
+                Role role = this.roleService.fetchRoleById(user.getRole().getId());
+                user.setRole(role != null ? role : null);
             }
             // update
             currentUser = this.userRepository.save(currentUser);
@@ -114,11 +132,6 @@ public class UserService {
             infoCompany.setId(user.getCompany().getId());
             infoCompany.setName(user.getCompany().getName());
             res.setCompany(infoCompany);
-        } else {
-            ResCreateUserDTO.CompanyUser companyInfo = new ResCreateUserDTO.CompanyUser();
-            companyInfo.setId(0);
-            companyInfo.setName(null);
-            res.setCompany(companyInfo);
         }
         return res;
     }
@@ -138,11 +151,12 @@ public class UserService {
             companyInfo.setId(user.getCompany().getId());
             companyInfo.setName(user.getCompany().getName());
             res.setCompany(companyInfo);
-        } else {
-            ResUserDTO.CompanyUser companyInfo = new ResUserDTO.CompanyUser();
-            companyInfo.setId(0);
-            companyInfo.setName(null);
-            res.setCompany(companyInfo);
+        }
+        if (user.getRole() != null) {
+            ResUserDTO.RoleUser roleUser = new ResUserDTO.RoleUser();
+            roleUser.setId(user.getRole().getId());
+            roleUser.setName(user.getRole().getName());
+            res.setRole(roleUser);
         }
         return res;
     }
@@ -160,12 +174,14 @@ public class UserService {
             company.setId(user.getCompany().getId());
             company.setName(user.getCompany().getName());
             res.setCompany(company);
-        } else {
-            ResUpdateUserDTO.CompanyUser companyInfo = new ResUpdateUserDTO.CompanyUser();
-            companyInfo.setId(0);
-            companyInfo.setName(null);
-            res.setCompany(companyInfo);
         }
+        if (user.getRole() != null) {
+            ResUpdateUserDTO.RoleUser roleUser = new ResUpdateUserDTO.RoleUser();
+            roleUser.setId(user.getRole().getId());
+            roleUser.setName(user.getRole().getName());
+            res.setRole(roleUser);
+        }
+
         return res;
     }
 

@@ -19,10 +19,18 @@ public class ResUpdateUserDTO {
     // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant udpatedAt;
     private CompanyUser company;
+    private RoleUser role;
 
     @Getter
     @Setter
     public static class CompanyUser {
+        private long id;
+        private String name;
+    }
+
+    @Getter
+    @Setter
+    public static class RoleUser {
         private long id;
         private String name;
     }

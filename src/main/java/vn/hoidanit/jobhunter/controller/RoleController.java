@@ -52,10 +52,10 @@ public class RoleController {
         if (checkRole == null) {
             throw new IdInvalidException("Role not found");
         }
-        boolean checkExist = this.roleService.handleCheckUpdate(reqRole);
-        if (!checkExist) {
-            throw new IdInvalidException("Role name existed");
-        }
+        // boolean checkExist = this.roleService.handleCheckUpdate(reqRole);
+        // if (!checkExist) {
+        // throw new IdInvalidException("Role name existed");
+        // }
         Role currentRole = this.roleService.handleUpdateRole(reqRole);
         // convert user to ResUpdateUserDTO to display
         return ResponseEntity.ok(currentRole);
