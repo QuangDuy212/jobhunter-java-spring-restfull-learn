@@ -1,5 +1,9 @@
 package vn.hoidanit.jobhunter.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -14,22 +18,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.turkraft.springfilter.boot.Filter;
+import com.turkraft.springfilter.builder.FilterBuilder;
+import com.turkraft.springfilter.converter.FilterSpecificationConverter;
+import com.turkraft.springfilter.parser.FilterParser;
 
 import jakarta.validation.Valid;
+import vn.hoidanit.jobhunter.domain.Company;
+import vn.hoidanit.jobhunter.domain.Job;
 import vn.hoidanit.jobhunter.domain.Permission;
+import vn.hoidanit.jobhunter.domain.Resume;
 import vn.hoidanit.jobhunter.domain.Role;
+import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.response.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.service.PermissionService;
+import vn.hoidanit.jobhunter.service.UserService;
+import vn.hoidanit.jobhunter.util.SecurityUtil;
 import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
 import vn.hoidanit.jobhunter.util.error.IdInvalidException;
 
 @RestController
 @RequestMapping("/api/v1")
 public class PermissionController {
-    private final PermissionService permissionService;
 
-    public PermissionController(PermissionService permissionService) {
+    private final PermissionService permissionService;
+    private final UserService userService;
+
+    public PermissionController(PermissionService permissionService, UserService userService) {
         this.permissionService = permissionService;
+        this.userService = userService;
     }
 
     @PostMapping("/permissions")
@@ -73,9 +89,6 @@ public class PermissionController {
     public ResponseEntity<ResultPaginationDTO> fetchAllPermissions(
             @Filter Specification<Permission> spec,
             Pageable pageable) {
-
-        // fetch all
-        // return ResponseEntity.status(HttpStatus.OK).body(users);
         return ResponseEntity.ok(this.permissionService.fetchAllPermissions(spec, pageable));
     }
 
