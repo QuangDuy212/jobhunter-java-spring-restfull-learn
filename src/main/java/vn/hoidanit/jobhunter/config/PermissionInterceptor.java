@@ -13,6 +13,7 @@ import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.service.UserService;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
 import vn.hoidanit.jobhunter.util.error.IdInvalidException;
+import vn.hoidanit.jobhunter.util.error.PermissionException;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
     public boolean preHandle(
             HttpServletRequest request,
             HttpServletResponse response, Object handler)
-            throws Exception, IdInvalidException {
+            throws Exception, PermissionException {
         String path = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
         String requestURI = request.getRequestURI();
         String httpMethod = request.getMethod();
@@ -48,10 +49,10 @@ public class PermissionInterceptor implements HandlerInterceptor {
                     boolean isAllow = permissions.stream()
                             .anyMatch(item -> item.getApiPath().equals(path) && item.getMethod().equals(httpMethod));
                     if (!isAllow) {
-                        throw new IdInvalidException("Bạn không có quyền truy cập vào trang này");
+                        throw new PermissionException("Bạn không có quyền truy cập vào trang này");
                     }
                 } else {
-                    throw new IdInvalidException("Bạn không có quyền truy cập vào trang này");
+                    throw new PermissionException("Bạn không có quyền truy cập vào trang này");
                 }
             }
         }
