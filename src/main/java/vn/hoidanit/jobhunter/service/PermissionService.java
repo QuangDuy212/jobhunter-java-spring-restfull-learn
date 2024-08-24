@@ -22,6 +22,13 @@ public class PermissionService {
         this.permissionRepository = permissionRepository;
     }
 
+    public boolean isSameName(Permission p) {
+        Permission pDB = this.fetchPermissionById(p.getId());
+        if (pDB == null)
+            return false;
+        return pDB.getName().equals(p.getName());
+    }
+
     public boolean isPermissionExist(Permission p) {
         return this.permissionRepository.existsByModuleAndApiPathAndMethod(
                 p.getModule(),

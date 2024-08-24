@@ -58,7 +58,9 @@ public class PermissionController {
 
         boolean checkExist = this.permissionService.isPermissionExist(reqPermission);
         if (checkExist) {
-            throw new IdInvalidException("Permission info existed");
+            // check name
+            if (this.permissionService.isSameName(reqPermission))
+                throw new IdInvalidException("Permission info existed");
         }
         // update
         Permission currentPermission = this.permissionService.handleUpdatePermission(reqPermission);
