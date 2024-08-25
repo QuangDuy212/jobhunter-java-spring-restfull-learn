@@ -100,6 +100,7 @@ public class SubscriberService {
 
     }
 
+    
     public void testCron() {
         System.out.println("TEST CRON");
     }
