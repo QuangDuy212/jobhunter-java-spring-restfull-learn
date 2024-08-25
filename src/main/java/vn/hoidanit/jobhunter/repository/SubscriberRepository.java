@@ -8,7 +8,7 @@ import vn.hoidanit.jobhunter.domain.Subscriber;
 import java.util.List;
 
 @Repository
-public interface SubscriberRespository extends JpaRepository<Subscriber, Long>, JpaSpecificationExecutor<Subscriber> {
+public interface SubscriberRepository extends JpaRepository<Subscriber, Long>, JpaSpecificationExecutor<Subscriber> {
     boolean existsByEmail(String email);
 
 }
