@@ -100,8 +100,7 @@ public class SubscriberService {
 
     }
 
-    
-    public void testCron() {
-        System.out.println("TEST CRON");
+    public Subscriber findByName(String email) {
+        return this.subscriberRepository.findByEmail(email);
     }
 }

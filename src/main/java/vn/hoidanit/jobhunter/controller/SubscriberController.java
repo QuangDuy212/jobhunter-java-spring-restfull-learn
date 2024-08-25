@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import vn.hoidanit.jobhunter.domain.Permission;
 import vn.hoidanit.jobhunter.domain.Subscriber;
 import vn.hoidanit.jobhunter.service.SubscriberService;
+import vn.hoidanit.jobhunter.util.SecurityUtil;
 import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
 import vn.hoidanit.jobhunter.util.error.IdInvalidException;
 
@@ -51,5 +52,15 @@ public class SubscriberController {
         Subscriber subscriber = this.subscriberService.handleUpdateSubscriber(reqSubscriber);
         // convert user to ResUpdateUserDTO to display
         return ResponseEntity.ok(subscriber);
+    }
+
+    @PostMapping("/subscribers/skills")
+    @ApiMessage("Get subscriber's skills")
+    public ResponseEntity<Subscriber> getSubscriberSkill()
+            throws IdInvalidException {
+        String email = SecurityUtil.getCurrentUserLogin().isPresent()
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.subscriberService.findByName(email));
     }
 }
